@@ -505,7 +505,7 @@ class CMS:
                     video_result = self.homeVideoContent(html,fypage)
             except Exception as e:
                 logger.info(f'{self.getName()}主页发生错误:{e}')
-
+        classes = list(filter(lambda x:not self.cate_exclude or not jsoup(self.url).test(self.cate_exclude, x['type_name']),classes))
         result['class'] = classes
         if self.filter:
             if isinstance(self.filter,dict):
@@ -715,7 +715,6 @@ class CMS:
                 'oheaders': self.d.oheaders,
                 'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
-                'cateID':fyclass, # 分类id
                 'MY_CATE':fyclass, # 分类id
                 'MY_FL':fl, # 筛选
                 'MY_PAGE':fypage,  # 页数
@@ -885,7 +884,7 @@ class CMS:
                     'input': url,
                     'html': html,
                     'TYPE': 'detail',  # 海阔js环境标志
-                    'cateID': fyclass,  # 当前分类
+                    'MY_CATE': fyclass,  # 分类id
                     'oheaders': self.d.oheaders,
                     'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                     'd': self.d,
@@ -983,7 +982,7 @@ class CMS:
                     'TYPE': 'detail',  # 海阔js环境标志
                     # 'VID': id,  # 传递的vod_id
                     '二级': self.二级渲染,  # 二级解析函数,可以解析dict
-                    'cateID': fyclass,  # 当前分类
+                    'MY_CATE': fyclass,  # 分类id
                     'oheaders': self.d.oheaders,
                     'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                     'd': self.d,
@@ -997,7 +996,7 @@ class CMS:
                 # print(jscode)
                 loader, _ = runJScode(jscode, ctx=ctx)
                 # print(loader.toString())
-                vod = loader.eval('vod')
+                vod = loader.eval('VOD')
                 if isinstance(vod,JsObjectWrapper):
                     vod = vod.to_dict()
                     if show_name:
