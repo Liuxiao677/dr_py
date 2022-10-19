@@ -47,6 +47,34 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm) 
+###### 2022/10/19
+- [X] 源增加 filter_def 属性用于指定不同分类下的默认筛选条件
+- [X] 修改搭建文档给出armv7设备的drpy运行兼容方案
+- [X] 增加厂长资源,just live等多个源,其中just live这个源用到了新特性 filter_def
+- [X] 版本更新至 3.9.11
+###### 2022/10/18
+- [ ] 没有二级只有一级的情况下想办法把标题和图片带进去二级。(这个想法实现难度太大了,直接放弃,不要瞎搞了)
+- [X] 3.9.10 (修复js模式1搜索不到结果,修复js模式0二级选集和线路异常,优化drpy聚搜)
+- [X] 源增加属性 模板,可用作模板继承
+###### 2022/10/17
+- [X] 3.9.8beta2 全局关闭https对应的ssl证书验证
+- [X] 3.9.9 增加新特性,简写快看源,修复小品网推荐显示
+- [X] 新增 推荐和搜索支持用*替代继承一级对应位置的列表,标题,图片,描述,详情,内容等定位
+- [X] drpy豆瓣推荐支持本地js
+- [X] 3.9.9beta2 修复指定分类第一页后无法翻页的问题
+###### 2022/10/16
+- [X] 3.9.8 完成ddys选集播放和免嗅(可惜我刚弄完没播放俩个剧就被封ip了)
+- [X] 3.9.8beta1 增加了俩自建js解析
+###### 2022/10/15
+- [X] beta2 修复dealJson导致的兔小贝一级分类无数据
+- [X] beta6 尝试完善低端影视,增加tabs和lists支持js:写法(js模式0和模式1同步测试)
+###### 2022/10/14
+- [X] todo:推荐支持* 自动集成一级定位
+- [X] todo:辅助嗅探
+- [X] done:推荐支持* 自动继承一级定位(参考短视频.js)
+- [X] done:drpy.js优化,drpy.ym.js完美支持pythonbox及俊版tvb
+- [X] 升级版本至3.9.7
+- [X] 3.9.7beta1 更新py和js的酷云77搜索
 ###### 2022/10/13
 - [X] 3.9.5修复凌云影视源并增加短视模板
 - [X] 增加秋霞影视,ddys等半成品(优化代码兼容取style属性的情况自动提取链接)
@@ -297,6 +325,17 @@ var rule = {
     quickSearch:0,//是否启用快速搜索,
     filterable:0,//是否启用筛选,
     filter:{},// 筛选条件字典
+    // 默认筛选条件字典(不同分类可以指定同样筛选参数的不同默认值)
+    filter_def:{
+        douyu:{
+        area:'一起看',
+        other:'..'
+        },
+        huya:{
+        area:'影音馆',
+        other:'..'
+        }
+    }, 
     // 筛选网站传参,会自动传到分类链接下(本示例中的url参数)-url里参数为fyfilter,可参考蓝莓影视.js
     filter_url:'style={{fl.style}}&zone={{fl.zone}}&year={{fl.year}}&fee={{fl.fee}}&order={{fl.order}}',
     // 注意,由于猫有配置缓存,搜索配置没法热加载，修改了js不需要重启服务器
@@ -327,6 +366,8 @@ var rule = {
     // 类似海阔一级 列表;标题;图片;描述;链接;详情 其中最后一个参数选填
     一级:'.col-sm-6;h3&&Text;img&&data-src;.date&&Text;a&&href',
     // 二级可以是*,表示规则无二级,直接拿一级的链接进行嗅探
+    // 二级 title: 片名;类型
+    // 二级 desc: 主要信息;年代;地区;演员;导演
     // 或者 {title:'',img:'',desc:'',content:'',tabs:'',lists:''} 同海阔dr二级
     二级:'*',
     // 搜索可以是*,集成一级，或者跟一级一样的写法 列表;标题;图片;描述;链接;详情
@@ -342,3 +383,14 @@ url:'/index.php/vod/show/id/fyclass/page/fypage.html',
 class_parse:'.navbar-items li:gt(1):lt(6);a&&Text;a&&href;.*/(.*?).html',
 });
 ```
+模板继承写法(新)
+```javascript
+var rule = {
+title:'cokemv',
+模板:'mxpro',
+host:'https://cokemv.me',
+class_parse:'.navbar-items li:gt(1):lt(7);a&&Text;a&&href;/(\\d+).html',
+}
+```
+js:内置变量
+input,html,VODS,VOD,TABS,LISTS
