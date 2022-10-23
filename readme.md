@@ -40,13 +40,37 @@
 </a>
 
 [JS引擎的选择](./python最强js引擎.md)  
-[搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  |[goorm](./道长乱说.md)  
+[搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  |[goorm](./道长乱说.md) |[大佬地盘](./大佬友链.md) 
 [dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)  
 [参考T4](https://github.com/sec-an/TV_Spider/blob/main/spider/sp360.py)  
 [golang最好的js引擎-otto](https://github.com/robertkrimen/otto)   
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
-[获取本地设备信息](https://m.jb51.net/article/140716.htm) 
+[获取本地设备信息](https://m.jb51.net/article/140716.htm)
+###### 2022/10/23
+- [X] 新增几个源 包括虎牙直播
+- [X] 设置中心增加仙人模式开关(自动识别不同设备返回不同的drpy接口,关闭的话只会走drpy.min.js)
+- [X] 3.9.15beta5 修复后台管理无法进入的bug,规定js源必须包含 var rule字符,不然不识别。中间仅有一个空格
+###### 2022/10/22
+- [X] 新增几个直播源
+- [X] 优化没有二级的情况自动带入一级图片和标题 @@分割
+- [X] 修复 JRKAN直播 二级智能拼接链接不正常的问题
+- [X] 学生录像一级用js重写(urljoin没毛病.网址结构有问题,只能如此了,仅支持js1)
+- [X] 完善荐片源的筛选
+- [X] 3.9.15beta2 优化jrkan直播二级 学生直播二级 新增 爱车MV
+###### 2022/10/21
+- [X] 源新增了play_json属性和与之对应的哔哩直播,jrs看直播等源
+- [X] 修复俊版无法搜索问题(还需要壳子彻底解决console.log函数问题,无法打印大数据)
+- [X] 升级至3.9.14,drpy.js代码中开始记录版本号
+- [X] 升级至3.9.14beta2 json优化并增加荐片源
+###### 2022/10/20
+- [X] 新增了几个源
+- [X] 修复乐猪TV源并记录已知问题
+- [X] 升级版本至:3.9.12 二级增加新特性 tab_text:'body&&Text',list_text:'body&&Text',list_url:'a&&href'
+- [X] drpy.js增加post方法,优化调用逻辑,修复奇优搜索
+- [X] 新增gaze源,只完成了推荐和一级
+- [X] 3.9.13 修复部分源历史记录异常问题
+- [X] 3.9.13beta1 增加了3个新源
 ###### 2022/10/19
 - [X] 源增加 filter_def 属性用于指定不同分类下的默认筛选条件
 - [X] 修改搭建文档给出armv7设备的drpy运行兼容方案
@@ -355,6 +379,15 @@ var rule = {
     tab_exclude:'',
     // 服务器解析播放
     play_parse:true,
+    // play_json　传数组或者　类　true/false 比如 0,1 如果不传会内部默认处理 不传和传0可能效果不同
+    // 效果等同说明: play_json:[{re:'*', json:{jx:0, parse:1}}], 等同于 play_json:0,
+    play_json:[{
+        re:'*',
+        json:{
+            jx:1,
+            parse:1,
+        },
+    }],
     // 自定义免嗅
     lazy:'',
     // 首页推荐显示数量
@@ -368,7 +401,7 @@ var rule = {
     // 二级可以是*,表示规则无二级,直接拿一级的链接进行嗅探
     // 二级 title: 片名;类型
     // 二级 desc: 主要信息;年代;地区;演员;导演
-    // 或者 {title:'',img:'',desc:'',content:'',tabs:'',lists:''} 同海阔dr二级
+    // 或者 {title:'',img:'',desc:'',content:'',tabs:'',lists:'',tab_text:'body&&Text',list_text:'body&&Text',list_url:'a&&href'} 同海阔dr二级
     二级:'*',
     // 搜索可以是*,集成一级，或者跟一级一样的写法 列表;标题;图片;描述;链接;详情
     搜索:'*',
